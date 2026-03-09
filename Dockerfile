@@ -1,28 +1,39 @@
 # ══════════════════════════════════════════════════════════
-# n8n + Playwright + Chromium
+# n8n + Puppeteer + Chromium
 # Para Railway (y compatible con cualquier Docker host)
-# Base: n8n latest (Debian-based)
+# Base: n8n v2.x (Alpine distroless — apk removido)
+# Workaround: reinstalar apk-tools primero
 # ══════════════════════════════════════════════════════════
 
 FROM n8nio/n8n:latest
 
-# Cambiar a root para instalar dependencias del sistema
 USER root
 
-# ── Dependencias de Chromium (Debian/Ubuntu) ──
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# ── Paso 1: Reinstalar apk (removido en n8n v2 distroless) ──
+RUN ARCH=$(uname -m) && \
+    wget -qO- "http://dl-cdn.alpinelinux.org/alpine/latest-stable/main/${ARCH}/" | \
+    grep -o 'href="apk-tools-static-[^"]*\.apk"' | head -1 | cut -d'"' -f2 | \
+    xargs -I {} wget -q "http://dl-cdn.alpinelinux.org/alpine/latest-stable/main/${ARCH}/{}" && \
+    tar -xzf apk-tools-static-*.apk && \
+    ./sbin/apk.static -X http://dl-cdn.alpinelinux.org/alpine/latest-stable/main \
+        -U --allow-untrusted add apk-tools && \
+    rm -rf sbin apk-tools-static-*.apk
+
+# ── Paso 2: Instalar Chromium y dependencias ──
+RUN apk add --no-cache \
     chromium \
-    fonts-freefont-ttf \
-    fonts-noto-color-emoji \
-    dbus \
-    udev \
-    && rm -rf /var/lib/apt/lists/*
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont \
+    font-noto-emoji
 
 # ── Variables de entorno para Puppeteer ──
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium \
-    CHROME_BIN=/usr/bin/chromium \
-    CHROME_PATH=/usr/bin/chromium
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser \
+    CHROME_BIN=/usr/bin/chromium-browser \
+    CHROME_PATH=/usr/bin/chromium-browser
 
 # ── Instalar dependencias Node para los scripts de scraping ──
 WORKDIR /data/scripts
