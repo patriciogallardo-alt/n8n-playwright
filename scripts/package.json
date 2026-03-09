@@ -1,0 +1,14 @@
+{
+  "name": "remesas-scrapers",
+  "version": "1.0.0",
+  "description": "Playwright scrapers for remittance services (WU, RIA, Afex)",
+  "private": true,
+  "dependencies": {
+    "puppeteer-core": "^22.6.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
