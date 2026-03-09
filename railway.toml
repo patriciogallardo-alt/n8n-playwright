@@ -1,0 +1,14 @@
+# railway.toml
+# Configuración de Railway para n8n + Playwright
+
+[build]
+# Railway usa este Dockerfile para construir la imagen
+dockerfilePath = "Dockerfile"
+
+[deploy]
+# Puerto de n8n
+startCommand = "n8n start"
+healthcheckPath = "/healthz"
+healthcheckTimeout = 300
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
