@@ -47,6 +47,10 @@ COPY scripts/ ./
 RUN mkdir -p /data/sessions/wu /data/sessions/ria /data/sessions/screenshots && \
     chown -R node:node /data/scripts /data/sessions
 
+# ── Asegurar permisos de n8n para el usuario node ──
+RUN mkdir -p /home/node/.n8n && \
+    chown -R node:node /home/node/.n8n
+
 # ── Volver al usuario n8n (node) ──
 USER node
 
