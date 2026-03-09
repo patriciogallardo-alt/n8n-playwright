@@ -12,7 +12,7 @@ const fs = require('fs');
 // Aplicar stealth plugin
 puppeteer.use(StealthPlugin());
 
-const CHROMIUM_PATH = process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser';
+const CHROMIUM_PATH = process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium';
 const SESSIONS_DIR = process.env.SESSIONS_DIR || '/data/sessions';
 const SCREENSHOTS_DIR = process.env.SCREENSHOTS_DIR || '/data/sessions/screenshots';
 
